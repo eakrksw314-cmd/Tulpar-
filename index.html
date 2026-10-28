@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tulpar Hastane Otomasyonu</title>
+<meta name="theme-color" content="#0e3b43">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tulpar">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+/* PWA: ikon + manifest kodla üretilir; service worker aynı klasördeki sw.js'ten yüklenir */
+(function(){
+  function icon(s){var c=document.createElement('canvas');c.width=c.height=s;var x=c.getContext('2d');
+    x.fillStyle='#0e3b43';x.fillRect(0,0,s,s);x.strokeStyle='#f2a65a';x.lineWidth=s*.045;x.lineJoin=x.lineCap='round';
+    x.beginPath();[[.14,.55],[.34,.55],[.42,.3],[.54,.78],[.63,.5],[.7,.55],[.86,.55]].forEach(function(p,i){i?x.lineTo(p[0]*s,p[1]*s):x.moveTo(p[0]*s,p[1]*s)});x.stroke();return c.toDataURL('image/png')}
+  var a=icon(192),b=icon(512),base=location.href.split('#')[0].split('?')[0];
+  var man={name:'Tulpar Hastane Otomasyonu',short_name:'Tulpar',start_url:base,scope:base.replace(/[^\/]*$/,''),display:'standalone',orientation:'portrait',background_color:'#eef3f1',theme_color:'#0e3b43',lang:'tr',
+    icons:[{src:a,sizes:'192x192',type:'image/png',purpose:'any'},{src:b,sizes:'512x512',type:'image/png',purpose:'any'},{src:b,sizes:'512x512',type:'image/png',purpose:'maskable'}]};
+  var l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'}));document.head.appendChild(l);
+  var t=document.createElement('link');t.rel='apple-touch-icon';t.href=a;document.head.appendChild(t);
+})();
+</script>
+<style>
+:root{--ink:#0e3b43;--ink2:#4b6b70;--bg:#eef3f1;--card:#fff;--line:#d5e0dd;--red:#c4311f;--yel:#c98512;--grn:#2c8a5b;--acc:#f2a65a;--blue:#1b6fa8}
+*{box-sizing:border-box;margin:0}
+body{font:15px/1.45 "Avenir Next","Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 14px;font-weight:600}
+button:active{transform:scale(.97)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+header{background:var(--ink);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:20}
+header b{font-size:18px;letter-spacing:.5px}header small{display:block;opacity:.75;font-size:12px}
+header button{background:transparent;color:#fff;border-color:#ffffff44;padding:6px 10px;font-size:13px}
+main{max-width:780px;margin:0 auto;padding:14px;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+h2{font-size:16px;margin-bottom:4px}.sub{color:var(--ink2);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.pt{display:grid;grid-template-columns:8px 1fr auto;gap:12px;align-items:center;text-align:left;width:100%;padding:12px;border-radius:12px;margin-top:8px}
+.pt.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink) inset}
+.pt i{align-self:stretch;border-radius:6px}.L-red i{background:var(--red)}.L-yellow i{background:var(--yel)}.L-green i{background:var(--grn)}
+.pt small{display:block;font-weight:400;color:var(--ink2)}
+.cd{font-variant-numeric:tabular-nums;font-weight:700;text-align:right;font-size:14px}.cd.late{color:var(--red)}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;border:1px solid}
+.t-red{color:var(--red)}.t-yellow{color:var(--yel)}.t-green{color:var(--grn)}
+.banner{background:#fff4e0;border:1px solid #f0cf94;border-left:5px solid var(--yel);border-radius:12px;padding:12px 14px;font-size:14px}
+.trace{background:var(--ink);border-radius:14px;padding:14px 14px 10px;color:#fff}
+canvas{width:100%;height:110px;display:block}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.nums div{border-top:2px solid;padding-top:6px}.nums span{display:block;font-size:12px;opacity:.8}
+.nums b{font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+textarea,input,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fbfdfc}
+textarea{resize:vertical;min-height:80px;margin:8px 0}
+.btn-p{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rec{border-left:4px solid var(--blue);padding:10px 12px;background:#f6faf9;border-radius:0 10px 10px 0;margin-top:10px}
+.rec small{color:var(--ink2)}.rec p{margin:4px 0}
+.k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--blue)}
+.ro{font-size:12px;color:var(--ink2)}
+.ok{color:var(--grn);font-weight:600;font-size:12px}.bad{color:var(--red);font-weight:700;font-size:12px}
+.ov{position:fixed;inset:0;background:var(--bg);z-index:40;overflow:auto}
+#login{position:fixed;inset:0;background:var(--ink);z-index:50;display:grid;place-items:center;padding:20px}
+#login .card{width:100%;max-width:380px;display:grid;gap:10px}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 16px;border-radius:12px;font-size:14px;z-index:99;max-width:90vw;text-align:center;display:none}
+.hide{display:none!important}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}th{font-size:11px;color:var(--ink2)}
+td input[type=checkbox]{width:20px;height:20px}
+</style>
+</head>
+<body>
+
+<div id="login"><div class="card">
+  <h2 style="font-size:22px">Tulpar</h2><p class="sub">Yetkili sağlık personeli girişi</p>
+  <select id="lu" aria-label="Personel"></select>
+  <input id="lp" type="password" inputmode="numeric" maxlength="4" placeholder="4 haneli PIN" aria-label="PIN">
+  <button class="btn-p" onclick="login()">Giriş yap</button>
+  <p class="sub">Demo PIN: Dr. Selin 1234 · Dr. Murat 5678 · Hemşire Canan 1111 · Bakıcı Ahmet 2222 · Tekniker Elif 3333</p>
+  <button onclick="openAdmin()">Yönetim Paneli</button>
+</div></div>
+
+<header>
+  <div><b>Tulpar</b><small id="who"></small></div>
+  <div style="display:flex;gap:8px">
+    <button id="install" class="hide" onclick="installApp()">Yükle</button>
+    <button onclick="openAdmin()">Yönetim</button>
+    <button onclick="logout()">Çıkış</button>
+  </div>
+</header>
+
+<main>
+  <div id="fair"></div>
+  <section class="card"><h2>Triyaj sırası</h2><p class="sub">Kritik hastalar üstte; süresi dolan hastalar adalet kuralıyla öne alınır.</p><div id="plist"></div></section>
+  <section id="det" class="hide" style="display:grid;gap:14px">
+    <div class="card">
+      <div class="row"><div><h2 id="pn"></h2><span class="sub" id="pm"></span></div><span id="ps" class="tag"></span></div>
+      <div class="trace" style="margin-top:12px"><canvas id="cv" width="700" height="220"></canvas>
+        <div class="nums"><div style="border-color:#e0573c"><span>Nabız</span><b id="vb"></b></div><div style="border-color:#6cb6e8"><span>SpO₂</span><b id="vo"></b></div><div style="border-color:var(--acc)"><span>Ateş</span><b id="vt"></b></div></div></div>
+      <button class="btn-p" style="margin-top:12px;width:100%" onclick="checked()">Kontrol edildi (sayacı sıfırla)</button>
+    </div>
+    <div class="card" id="form"></div>
+    <div class="card"><div class="row"><h2>Kayıt geçmişi</h2><span id="integ"></span></div>
+      <p class="ro">Kayıtlar eklemeli ve mühürlüdür: hiçbir kullanıcı değiştiremez veya silemez.</p><div id="logs"></div></div>
+  </section>
+</main>
+
+<div id="adm" class="ov hide"><main>
+  <div class="row"><h2 style="font-size:20px">Yönetim Paneli</h2><button onclick="closeAdmin()">Kapat</button></div>
+  <div id="agate" class="card" style="display:grid;gap:10px"><p>Yönetim şifresini girin</p><input id="ap" type="password" inputmode="numeric" maxlength="4" placeholder="Şifre" aria-label="Yönetim şifresi"><button class="btn-p" onclick="adminUnlock()">Aç</button></div>
+  <div id="abody" class="hide" style="display:grid;gap:14px"></div>
+</main></div>
+<div id="toast" role="status"></div>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+var ROLES={doctor:'Doktor',nurse:'Hemşire',carer:'Hasta Bakıcı',tech:'Tekniker'};
+var PERM={doctor:['tedavi','ilac','not'],nurse:['not','bakim'],carer:['bakim'],tech:['cihaz']};
+var TYPES={tedavi:'Tedavi',ilac:'İlaç',not:'Klinik / hemşirelik notu',bakim:'Bakım notu',cihaz:'Cihaz notu'};
+var SLA={red:300,yellow:600,green:1200},RED_GRACE=120;
+var PAT=[{id:1,name:'Ayşe Demir',age:67,room:'204',b:{b:78,o:97,x:36.6}},{id:2,name:'Mehmet Yıldız',age:54,room:'207',b:{b:104,o:93,x:37.8}},
+ {id:3,name:'Zeynep Arslan',age:72,room:'112',b:{b:128,o:88,x:39.1}},{id:4,name:'Can Öztürk',age:41,room:'305',b:{b:72,o:98,x:36.7}},{id:5,name:'Fatma Koç',age:80,room:'118',b:{b:96,o:94,x:38.2}}];
+var DSTAFF=[{id:'s1',name:'Dr. Selin Kaya',role:'doctor',pin:'1234'},{id:'s2',name:'Dr. Murat Aksoy',role:'doctor',pin:'5678'},{id:'s3',name:'Hemşire Canan',role:'nurse',pin:'1111'},{id:'s4',name:'Bakıcı Ahmet',role:'carer',pin:'2222'},{id:'s5',name:'Tekniker Elif',role:'tech',pin:'3333'}];
+var DASG={s1:[1,2,3],s2:[3,4,5],s3:[1,2,3,4,5],s4:[1,2,4],s5:[1,2,3,4,5]};
+function ld(k,f){try{return JSON.parse(localStorage.getItem(k))||f}catch(e){return f}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none'},3500)}
+var STAFF=ld('tp_staff',DSTAFF),ASG=ld('tp_asg',DASG),RECS=ld('tp_recs',null),CHK=ld('tp_chk',null),me=null,sel=null,adminOK=false,intact={},warned={};
+var live={};PAT.forEach(function(p){live[p.id]={bpm:p.b.b,spo2:p.b.o,temp:p.b.x}});
+if(!CHK){CHK={};var n0=Date.now();[[1,2],[2,9],[3,4],[4,3],[5,12]].forEach(function(a){CHK[a[0]]=n0-a[1]*60000});sv('tp_chk',CHK)}
+
+/* ---------- Mühürlü kayıt zinciri (SHA-256) ---------- */
+function H(s){if(window.crypto&&crypto.subtle&&window.TextEncoder)return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')});
+  var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return Promise.resolve('f'+h.toString(16))}
+function payload(r){return [r.prev,r.id,r.t,r.type,r.text,r.by,r.role,JSON.stringify(r.vit)].join('|')}
+function seal(pid,r){var L=RECS[pid]||(RECS[pid]=[]);r.prev=L.length?L[L.length-1].hash:'GENESIS';return H(payload(r)).then(function(h){r.hash=h;L.push(Object.freeze(r));sv('tp_recs',RECS)})}
+function verify(){var ps=PAT.map(function(p){var L=RECS[p.id]||[],prev='GENESIS',chain=Promise.resolve(true);
+  L.forEach(function(r){chain=chain.then(function(ok){if(!ok)return false;if(r.prev!==prev)return false;prev=r.hash;return H(payload(r)).then(function(h){return h===r.hash})})});
+  return chain.then(function(ok){intact[p.id]=ok})});return Promise.all(ps)}
+function seed(){var now=Date.now(),defs=[[1,'ilac','Parasetamol 500 mg, 8 saatte bir.','s1',{b:78,o:97,x:36.6},180],[2,'tedavi','Serum takibi ve sıvı desteği başlandı.','s2',{b:104,o:93,x:37.8},90],[3,'tedavi','Oksijen desteği 2 L/dk, yakın izlem.','s1',{b:128,o:88,x:39.1},40],[5,'not','Ateş takibi, 4 saatte bir ölçüm.','s3',{b:96,o:94,x:38.2},120]];
+  RECS={};var c=Promise.resolve();defs.forEach(function(d,i){c=c.then(function(){var s=DSTAFF.filter(function(x){return x.id===d[3]})[0];return seal(d[0],{id:i+1,t:now-d[5]*60000,type:d[1],text:d[2],by:s.name,role:s.role,vit:d[4]})})});return c}
+
+/* ---------- Triyaj ve adalet mekanizması ---------- */
+function level(v){if(v.spo2<90||v.bpm>125||v.bpm<45||v.temp>=39)return'red';if(v.spo2<95||v.bpm>100||v.bpm<50||v.temp>=38)return'yellow';return'green'}
+var LN={red:'Kritik',yellow:'Gözlem',green:'Stabil'};
+function mine(){if(!me)return[];return PAT.filter(function(p){return(ASG[me.id]||[]).indexOf(p.id)>-1})}
+function fmt(s){var a=Math.abs(Math.round(s));return(s<0?'+':'')+String(Math.floor(a/60)).padStart(2,'0')+':'+String(a%60).padStart(2,'0')}
+function ranked(){var now=Date.now();return mine().map(function(p){var lv=level(live[p.id]),el=(now-CHK[p.id])/1000,left=SLA[lv]-el,rank;
+  if(lv==='red')rank=el<RED_GRACE?1.5:0;else if(lv==='yellow')rank=left<0?.5:1;else rank=left<0?1.2:2;
+  return{p:p,lv:lv,el:el,left:left,rank:rank}}).sort(function(a,b){return a.rank-b.rank||a.left-b.left})}
+function renderList(){var R=ranked(),hasRed=R.some(function(x){return x.lv==='red'}),late=R.filter(function(x){return x.lv!=='red'&&x.left<0});
+  $('plist').innerHTML=R.length?R.map(function(x){var v=live[x.p.id];return '<button class="pt L-'+x.lv+(sel===x.p.id?' on':'')+'" onclick="pick('+x.p.id+')"><i></i><span><b>'+esc(x.p.name)+'</b> <span class="tag t-'+x.lv+'">'+LN[x.lv]+'</span><small>Oda '+x.p.room+' · '+Math.round(v.bpm)+' atım · %'+Math.round(v.spo2)+' · '+v.temp.toFixed(1)+'°C</small></span><span class="cd'+(x.left<0?' late':'')+'">'+(x.left<0?'GECİKTİ '+fmt(-x.left).replace('+','+'):fmt(x.left))+'<small>sonraki kontrol</small></span></button>'}).join(''):'<p class="sub" style="margin-top:8px">Size atanmış hasta yok. Yönetim Paneli\'nden atama yapılmalı.</p>';
+  $('fair').innerHTML=hasRed&&late.length?'<div class="banner"><b>Adalet uyarısı:</b> Kritik hastalar önde olsa da '+late.map(function(x){return esc(x.p.name)+' ('+Math.floor(-x.left/60+SLA[x.lv]/60)+' dk kontrolsüz)'}).join(', ')+' için kontrol süresi doldu; sıra öne alındı.</div>':'';
+  late.forEach(function(x){if(hasRed&&(!warned[x.p.id]||Date.now()-warned[x.p.id]>60000)){warned[x.p.id]=Date.now();toast('Kontrol zamanı: '+x.p.name);if(navigator.vibrate)navigator.vibrate([200,100,200])}})}
+function checked(){if(!sel)return;CHK[sel]=Date.now();sv('tp_chk',CHK);renderList();toast('Kontrol kaydedildi, sayaç sıfırlandı.')}
+
+/* ---------- Giriş ---------- */
+function fillLogin(){$('lu').innerHTML=STAFF.map(function(u){return '<option value="'+u.id+'">'+esc(u.name)+' · '+ROLES[u.role]+'</option>'}).join('')}
+function login(){var u=STAFF.filter(function(x){return x.id===$('lu').value})[0];
+  if(u&&$('lp').value===u.pin){me=u;$('lp').value='';$('login').classList.add('hide');$('who').textContent=me.name+' · '+ROLES[me.role]+(me.role==='doctor'?' (tam yetki)':' (kısıtlı yetki)');sel=null;$('det').classList.add('hide');renderList()}else toast('PIN hatalı.')}
+function logout(){me=null;sel=null;$('det').classList.add('hide');$('login').classList.remove('hide')}
+$('lp').addEventListener('keydown',function(e){if(e.key==='Enter')login()});
+
+/* ---------- Hasta ekranı ---------- */
+function pick(id){sel=id;var p=PAT.filter(function(x){return x.id===id})[0];$('det').classList.remove('hide');$('pn').textContent=p.name;$('pm').textContent='Yaş '+p.age+' · Oda '+p.room;buf=[];
+  var ty=PERM[me.role];$('form').innerHTML='<h2>Yeni kayıt</h2><p class="sub">'+(me.role==='doctor'?'Doktor: tedavi ve ilaç ekleyebilir.':'Yetkiniz: '+ty.map(function(t){return TYPES[t]}).join(', ')+'. Tedavi/ilaç ekleyemezsiniz.')+'</p>'+
+   '<select id="ft" style="margin-top:8px">'+ty.map(function(t){return '<option value="'+t+'">'+TYPES[t]+'</option>'}).join('')+'</select><textarea id="fx" placeholder="Kayıt metni (kaydedildikten sonra değiştirilemez)"></textarea><button class="btn-p" onclick="addRec()">Mühürle ve kaydet</button>';
+  renderList();renderLogs();vitals();$('det').scrollIntoView({behavior:'smooth'})}
+function vitals(){if(!sel)return;var v=live[sel],lv=level(v);$('vb').textContent=Math.round(v.bpm);$('vo').textContent='%'+Math.round(v.spo2);$('vt').textContent=v.temp.toFixed(1)+'°';var s=$('ps');s.textContent=LN[lv];s.className='tag t-'+lv}
+function addRec(){if(!me||!sel)return;var ty=$('ft').value,tx=$('fx').value.trim();
+  if(PERM[me.role].indexOf(ty)<0){toast('Bu kayıt türü için yetkiniz yok.');return}
+  if((ASG[me.id]||[]).indexOf(sel)<0){toast('Bu hasta size atanmamış.');return}
+  if(!tx){toast('Kayıt metni boş olamaz.');return}
+  var v=live[sel],id=sel;seal(id,{id:Date.now(),t:Date.now(),type:ty,text:tx,by:me.name,role:me.role,vit:{b:Math.round(v.bpm),o:Math.round(v.spo2),x:+v.temp.toFixed(1)}}).then(function(){CHK[id]=Date.now();sv('tp_chk',CHK);$('fx').value='';return verify()}).then(function(){renderLogs();renderList();toast('Kayıt mühürlendi.')})}
+function renderLogs(){var L=(RECS[sel]||[]).slice().reverse();
+  $('integ').innerHTML=intact[sel]===false?'<span class="bad">⚠ Zincir bozuk: veri değiştirilmiş!</span>':'<span class="ok">✓ Bütünlük doğrulandı</span>';
+  $('logs').innerHTML=L.length?L.map(function(r){var d=new Date(r.t);return '<div class="rec"><span class="k">'+esc(TYPES[r.type]||r.type)+'</span><div><small>'+d.toLocaleString('tr-TR')+' · '+esc(r.by)+' ('+esc(ROLES[r.role]||r.role)+')</small></div><p>'+esc(r.text)+'</p><small>'+r.vit.b+' atım · %'+r.vit.o+' · '+r.vit.x+'°C · 🔒 '+esc(String(r.hash).slice(0,10))+'</small></div>'}).join(''):'<p class="sub" style="margin-top:8px">Henüz kayıt yok.</p>'}
+
+/* ---------- Simülasyon ve EKG ---------- */
+var buf=[],phase=0,cv=$('cv'),cx=cv.getContext('2d'),N=350;
+function g(p,c,w,a){return a*Math.exp(-Math.pow(p-c,2)/(2*w*w))}
+function ecg(p){return g(p,.18,.025,.12)+g(p,.3,.008,-.12)+g(p,.33,.01,1)+g(p,.36,.01,-.25)+g(p,.58,.05,.25)}
+setInterval(function(){if(!sel)return;phase+=.03*live[sel].bpm/60;if(phase>=1)phase-=1;buf.push(ecg(phase)+(Math.random()-.5)*.02);if(buf.length>N)buf.shift();
+  var w=cv.width,h=cv.height;cx.clearRect(0,0,w,h);cx.strokeStyle='#ffffff14';cx.beginPath();for(var i=0;i<w;i+=35){cx.moveTo(i,0);cx.lineTo(i,h)}for(var j=0;j<h;j+=30){cx.moveTo(0,j);cx.lineTo(w,j)}cx.stroke();
+  cx.strokeStyle='#f2a65a';cx.lineWidth=2.4;cx.beginPath();buf.forEach(function(v,i){var X=i/N*w,Y=h*.72-v*h*.55;i?cx.lineTo(X,Y):cx.moveTo(X,Y)});cx.stroke()},30);
+setInterval(function(){PAT.forEach(function(p){var l=live[p.id],r=function(n){return(Math.random()*2-1)*n};
+  l.bpm=Math.max(45,Math.min(140,l.bpm+r(2)+(p.b.b-l.bpm)*.1));l.spo2=Math.max(85,Math.min(100,l.spo2+r(.6)+(p.b.o-l.spo2)*.2));l.temp=Math.max(35,Math.min(41,l.temp+r(.05)+(p.b.x-l.temp)*.1))});vitals()},2000);
+setInterval(function(){if(me)renderList()},1000);
+
+/* ---------- Yönetim paneli ("0000") ---------- */
+function openAdmin(){$('adm').classList.remove('hide');if(adminOK)drawAdmin();else{$('agate').classList.remove('hide');$('abody').classList.add('hide');$('ap').value='';$('ap').focus()}}
+function closeAdmin(){$('adm').classList.add('hide');adminOK=false;fillLogin();if(me)renderList()}
+function adminUnlock(){if($('ap').value==='0000'){adminOK=true;drawAdmin()}else toast('Yönetim şifresi hatalı.')}
+$('ap').addEventListener('keydown',function(e){if(e.key==='Enter')adminUnlock()});
+function drawAdmin(){$('agate').classList.add('hide');var b=$('abody');b.classList.remove('hide');
+  b.innerHTML='<div class="card"><h2>Personel ve roller</h2><p class="sub">Yalnızca Doktor rolü tedavi/ilaç ekleyebilir. Geçmiş kayıtlar hiçbir rolle değiştirilemez.</p>'+
+   STAFF.map(function(s){return '<div class="row" style="margin-top:8px"><span style="flex:1;min-width:130px"><b>'+esc(s.name)+'</b><br><small class="sub">PIN '+esc(s.pin)+'</small></span><select style="width:auto" onchange="setRole(\''+s.id+'\',this.value)">'+Object.keys(ROLES).map(function(r){return '<option value="'+r+'"'+(r===s.role?' selected':'')+'>'+ROLES[r]+'</option>'}).join('')+'</select></div>'}).join('')+
+   '<div style="display:grid;gap:8px;margin-top:14px"><input id="nn" placeholder="Yeni personel adı"><input id="np" inputmode="numeric" maxlength="4" placeholder="4 haneli PIN"><select id="nr">'+Object.keys(ROLES).map(function(r){return '<option value="'+r+'">'+ROLES[r]+'</option>'}).join('')+'</select><button class="btn-p" onclick="addStaff()">Personel ekle</button></div></div>'+
+   '<div class="card" style="overflow-x:auto"><h2>Hasta atamaları</h2><p class="sub">Personel yalnızca kendisine atanan hastaları görür.</p><table><tr><th>Hasta</th>'+STAFF.map(function(s){return '<th>'+esc(s.name.split(' ').slice(-1)[0])+'</th>'}).join('')+'</tr>'+
+   PAT.map(function(p){return '<tr><td>'+esc(p.name)+'</td>'+STAFF.map(function(s){return '<td><input type="checkbox" aria-label="'+esc(p.name+' - '+s.name)+'" onchange="setAsg(\''+s.id+'\','+p.id+',this.checked)"'+((ASG[s.id]||[]).indexOf(p.id)>-1?' checked':'')+'></td>'}).join('')+'</tr>'}).join('')+'</table></div>'}
+function setRole(id,r){STAFF.forEach(function(s){if(s.id===id)s.role=r});sv('tp_staff',STAFF);toast('Rol güncellendi.');if(me&&me.id===id){me.role=r;$('who').textContent=me.name+' · '+ROLES[r];if(sel)pick(sel)}}
+function addStaff(){var n=$('nn').value.trim(),p=$('np').value.trim();if(!n||!/^\d{4}$/.test(p)){toast('Ad ve 4 haneli PIN gerekli.');return}
+  if(p==='0000'){toast('0000 yönetim şifresi için ayrılmıştır.');return}STAFF.push({id:'s'+Date.now(),name:n,role:$('nr').value,pin:p});sv('tp_staff',STAFF);drawAdmin()}
+function setAsg(sid,pid,on){var a=ASG[sid]=ASG[sid]||[],i=a.indexOf(pid);if(on&&i<0)a.push(pid);if(!on&&i>-1)a.splice(i,1);sv('tp_asg',ASG)}
+
+/* ---------- PWA ---------- */
+var dp=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;$('install').classList.remove('hide')});
+function installApp(){if(dp){dp.prompt();dp=null;$('install').classList.add('hide')}}
+window.addEventListener('load',function(){if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(function(){})});
+
+/* ---------- Başlat ---------- */
+fillLogin();(RECS?Promise.resolve():seed()).then(verify);
+</script>
+</body>
+</html>

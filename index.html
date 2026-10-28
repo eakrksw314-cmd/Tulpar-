@@ -4,257 +4,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tulpar Akıllı Bileklik</title>
+<title>Tulpar Akıllı Bileklik - Yönetim Paneli</title>
 <meta name="theme-color" content="#0e3b43">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>
-(function () {
-  function icon(s) {
-    var c = document.createElement('canvas'); c.width = c.height = s; var x = c.getContext('2d');
-    x.fillStyle = '#0e3b43'; x.fillRect(0, 0, s, s);
-    x.strokeStyle = '#f2a65a'; x.lineWidth = s * 0.045; x.lineJoin = x.lineCap = 'round';
-    x.beginPath(); var m = [[14, 55], [34, 55], [42, 3], [54, 78], [63, 5], [7, 55], [86, 55]];
-    m.forEach(function (p, i) { if (i ? x.lineTo(p[0]*s, p[1]*s) : x.moveTo(p[0]*s, p[1]*s)); }); x.stroke();
-    return c.toDataURL('image/png');
-  }
-  var a = icon(192), b = icon(512), base = location.href.split('#')[0].split('?')[0];
-  var man = { name: 'Tulpar Akıllı Bileklik', short_name: 'Tulpar', start_url: base,
-    scope: base.replace(/[^/]*$/, ''), display: 'standalone', orientation: 'portrait',
-    background_color: '#eef3f1', theme_color: '#0e3b43', lang: 'tr', icons: [
-    { src: a, sizes: '192x192', type: 'image/png', purpose: 'any' },
-    { src: b, sizes: '512x512', type: 'image/png', purpose: 'any' },
-    { src: b, sizes: '512x512', type: 'image/png', purpose: 'maskable' } ] };
-  var l = document.createElement('link'); l.rel = 'manifest';
-  l.href = URL.createObjectURL(new Blob([JSON.stringify(man)], { type: 'application/manifest+json' }));
-  document.head.appendChild(l);
-  var t = document.createElement('link'); t.rel = 'apple-touch-icon'; t.href = a; document.head.appendChild(t);
-})();
-</script>
 <style>
 :root{--ink:#0e3b43;--ink2:#4b6b70;--bg:#eef3f1;--card:#fff;--line:#d5e0dd;--hr:#d9482b;--ox:#1b6fa8;--tp:#c98512;--ok:#2c8a5b;--bad:#c4311f;--acc:#f2a65a}
 *{box-sizing:border-box;margin:0}
-body{font:15px/1.45 'Avenir Next',Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
-button,input,select,textarea{font:inherit;color:inherit}
+body{font:15px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;max-width:500px;margin:20px auto}
+h2{font-size:18px;margin-bottom:6px}
+.sub{color:var(--ink2);font-size:13px;margin-bottom:12px}
 button{cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 14px;font-weight:600}
-button:active{transform:scale(.97)}
-:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
-header{background:var(--ink);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:20}
-header b{font-size:18px;letter-spacing:.5px}
-header small{display:block;opacity:.7;font-size:12px}
-header button{background:transparent;color:#fff;border-color:#ffffff44;padding:6px 10px;font-size:13px}
-main{max-width:760px;margin:0 auto;padding:14px;display:grid;gap:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
-h2{font-size:16px;margin-bottom:4px}
-.sub{color:var(--ink2);font-size:13px}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
-.chip{flex:0 0 auto;text-align:left;border-radius:12px;padding:10px 12px;min-width:150px}
-.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.chip small{display:block;font-weight:400;opacity:.75}
-.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;border:1px solid}
-.s-stabil{color:var(--ok)} .s-gozlem{color:var(--tp)} .s-kritik{color:var(--bad)}
-.trace{background:var(--card);border-radius:14px;padding:14px 14px 10px;color:#fff;position:relative}
-canvas{width:100%;height:120px;display:block}
-.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
-.nums div{border-top:2px solid;padding-top:6px}
-.nums span{display:block;font-size:12px;opacity:.8}
-.nums b{font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
-.nums em{font-style:normal;font-size:12px;opacity:.85}
-.n1{border-color:var(--hr)!important}.n2{border-color:#6cb6e8!important}.n3{border-color:var(--acc)!important}
-.live{position:absolute;right:14px;top:12px;font-size:12px;display:flex;align-items:center;gap:6px;opacity:.85}
-.live i{width:8px;height:8px;border-radius:50%;background:#5be09a;animation:b 1.4s infinite}
-@keyframes b{50%{opacity:.25}}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.btn-p{background:var(--ink);color:#fff;border-color:var(--ink)}
-textarea,input,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fbfdfc}
-textarea{resize:vertical;min-height:84px}
-.rec{border-left:4px solid var(--ox);padding:10px 12px;background:#f6faf9;border-radius:0 10px 10px 0}
-#modal{position:fixed;inset:0;background:#0008;z-index:100;display:flex;align-items:center;justify-content:center;padding:14px}
-.modal-box{background:#fff;border-radius:16px;max-width:440px;width:100%;padding:20px;display:grid;gap:12px;max-height:90vh;overflow-y:auto}
+.btn-p{background:var(--ink);color:#fff;border-color:var(--ink);width:100%}
+input,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fbfdfc;margin:6px 0}
+.row{display:flex;justify-content:space-between;align-items:center}
+hr{border:0;border-top:1px solid var(--line);margin:12px 0}
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <b id="h-title">Tulpar</b>
-    <small id="h-sub">Sistem Yükleniyor...</small>
+<div class="card">
+  <div class="row">
+    <h2>Yönetim Paneli</h2>
+    <button onclick="alert('Kapatıldı')">Kapat</button>
   </div>
-  <div style="display:flex;gap:6px">
-    <button onclick="openAdmin()">Yönetim</button>
-    <button onclick="scanNfc()">Bileklik</button>
-    <button onclick="logout()">Çıkış</button>
+  <p class="sub">Yalnızca Doktor rolü tedavi/ilaç ekleyebilir. Geçmiş kayıtlar hiçbir rolle değiştirilemez.</p>
+  
+  <div style="margin-top:14px">
+    <div class="row">
+      <div><b>Dr. Selin Kaya</b><br><small style="color:var(--ink2)">PIN 1234</small></div>
+      <select style="width:140px"><option>Doktor</option></select>
+    </div>
+    <hr>
+    <div class="row">
+      <div><b>Dr. Murat Aksoy</b><br><small style="color:var(--ink2)">PIN 5678</small></div>
+      <select style="width:140px"><option>Doktor</option></select>
+    </div>
+    <hr>
+    <div class="row">
+      <div><b>Hemşire Canan</b><br><small style="color:var(--ink2)">PIN 1111</small></div>
+      <select style="width:140px"><option>Hemşire</option></select>
+    </div>
+    <hr>
+    <div class="row">
+      <div><b>Bakıcı Ahmet</b><br><small style="color:var(--ink2)">PIN 2222</small></div>
+      <select style="width:140px"><option>Hasta Bakıcı</option></select>
+    </div>
+    <hr>
+    <div class="row">
+      <div><b>Tekniker Elif</b><br><small style="color:var(--ink2)">PIN 3333</small></div>
+      <select style="width:140px"><option>Tekniker</option></select>
+    </div>
   </div>
-</header>
 
-<main id="app"></main>
-
-<div id="modal" style="display:none">
-  <div class="modal-box" id="modal-content"></div>
+  <div style="margin-top:18px">
+    <input type="text" placeholder="Yeni personel adı">
+    <input type="password" placeholder="4 haneli PIN" maxlength="4">
+    <select>
+      <option>Doktor</option>
+      <option>Hemşire</option>
+      <option>Hasta Bakıcı</option>
+      <option>Tekniker</option>
+    </select>
+    <button class="btn-p" style="margin-top:8px" onclick="alert('Personel eklendi')">Personel ekle</button>
+  </div>
 </div>
 
-<script>
-let authPin = null, currentUser = null, currentPatientId = 'p1';
-let staff = [
-  {name: 'Dr. Selin Kaya', role: 'Doktor', pin: '1234'},
-  {name: 'Dr. Murat Aksoy', role: 'Doktor', pin: '5678'},
-  {name: 'Hemşire Canan', role: 'Hemşire', pin: '0000'}
-];
-let patients = {
-  'p1': {name: 'Ahmet Yılmaz', age: 68, room: 'Oda 302-B', tag: 'TLP-8842', status: 'Stabil', hr: 75, spo2: 96, temp: 36.6, notes: []},
-  'p2': {name: 'Fatma Şahin', age: 74, room: 'Oda 104-A', tag: 'TLP-5519', status: 'Kritik', hr: 112, spo2: 91, temp: 38.2, notes: []}
-};
-
-function init() { renderLogin(); }
-
-function renderLogin() {
-  document.getElementById('app').innerHTML = `
-    <div class="card" style="max-width:400px;margin:40px auto;text-align:center">
-      <h2>Tulpar Giriş</h2>
-      <p class="sub">Lütfen personel seçip PIN giriniz</p>
-      <select id="sel-staff" style="margin:12px 0">
-        ${staff.map((s, i) => `<option value="${i}">${s.name} - ${s.role}</option>`).join('')}
-      </select>
-      <input type="password" id="inp-pin" placeholder="4 haneli PIN" maxlength="4" style="text-align:center;font-size:20px;letter-spacing:6px">
-      <button class="btn-p" style="margin-top:12px;width:100%" onclick="doLogin()">Giriş yap</button>
-      <p class="sub" style="margin-top:14px;font-size:12px">Demo PIN: Selin 1234, Murat 5678, Canan 0000</p>
-    </div>
-  `;
-}
-
-function doLogin() {
-  let idx = document.getElementById('sel-staff').value;
-  let pin = document.getElementById('inp-pin').value;
-  if(pin === staff[idx].pin) {
-    currentUser = staff[idx];
-    renderDashboard();
-  } else {
-    alert('Hatalı PIN!');
-  }
-}
-
-function logout() {
-  currentUser = null;
-  renderLogin();
-}
-
-function renderDashboard() {
-  let p = patients[currentPatientId];
-  document.getElementById('h-sub').innerText = `${currentUser.name} · ${currentUser.role}`;
-
-  document.getElementById('app').innerHTML = `
-    <div class="chips">
-      ${Object.keys(patients).map(id => {
-        let pat = patients[id];
-        return `<button class="chip ${id === currentPatientId ? 'on' : ''}" onclick="currentPatientId='${id}';renderDashboard()">
-          <b>${pat.name}</b>
-          <small>${pat.room} · ${pat.tag}</small>
-        </button>`;
-      })}
-    </div>
-
-    <div class="card">
-      <div class="row">
-        <h2>${p.name}</h2>
-        <span class="tag s-${p.status.toLowerCase()}">${p.status}</span>
-      </div>
-      <div class="sub">Yaş ${p.age} · ${p.room} · ${p.tag}</div>
-    </div>
-
-    <div class="trace">
-      <div class="live"><i></i><span>Bulut Senkronize</span></div>
-      <canvas id="ecg"></canvas>
-      <div class="nums">
-        <div class="n1"><span>Nabız</span><b>${p.hr}</b><em>Normal 60-100</em></div>
-        <div class="n2"><span>SpO2</span><b>%${p.spo2}</b><em>İdeal %95+</em></div>
-        <div class="n3"><span>Sıcaklık</span><b>${p.temp}°C</b><em>Normal</em></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Sesli Rapor ve Tıbbi Not</h2>
-      <textarea id="med-note" placeholder="Tıbbi notu söyleyin veya yazın"></textarea>
-      <button class="btn-p" style="margin-top:8px" onclick="addNote()">Notu Kaydet</button>
-      <div style="margin-top:12px">
-        ${p.notes.map(n => `<div class="rec" style="margin-top:6px">${n}</div>`).join('')}
-      </div>
-    </div>
-  `;
-}
-
-function addNote() {
-  let txt = document.getElementById('med-note').value;
-  if(!txt) return;
-  patients[currentPatientId].notes.unshift(txt);
-  document.getElementById('med-note').value = '';
-  renderDashboard();
-}
-
-function openAdmin() {
-  let m = document.getElementById('modal');
-  let box = document.getElementById('modal-content');
-  m.style.display = 'flex';
-  box.innerHTML = `
-    <h2>Yönetim Paneli</h2>
-    <p class="sub">Personel ve Hasta Yönetimi</p>
-    
-    <div style="font-weight:bold;margin-top:8px">Personel Listesi</div>
-    ${staff.map((s, i) => `<div class="row" style="font-size:14px"><span>${s.name} (${s.role})</span><button onclick="removeStaff(${i})" style="padding:2px 8px;font-size:12px">Sil</button></div>`).join('')}
-    
-    <hr style="border:0;border-top:1px solid var(--line);margin:8px 0">
-    <div style="font-weight:bold">Yeni Personel Ekle</div>
-    <input type="text" id="np-name" placeholder="Ad Soyad">
-    <input type="password" id="np-pin" placeholder="4 Haneli PIN" maxlength="4">
-    <select id="np-role"><option>Doktor</option><option>Hemşire</option><option>Hasta Bakıcı</option></select>
-    <button class="btn-p" onclick="addNewStaff()">Personel Ekle</button>
-
-    <hr style="border:0;border-top:1px solid var(--line);margin:8px 0">
-    <div style="font-weight:bold">Yeni Hasta Ekle</div>
-    <input type="text" id="nh-name" placeholder="Hasta Adı Soyadı">
-    <input type="text" id="nh-room" placeholder="Oda (Örn: Oda 101)">
-    <input type="text" id="nh-tag" placeholder="Bileklik ID (Örn: TLP-9910)">
-    <button class="btn-p" onclick="addNewPatient()">Hasta Ekle</button>
-
-    <button onclick="document.getElementById('modal').style.display='none'" style="margin-top:8px">Kapat</button>
-  `;
-}
-
-function addNewStaff() {
-  let name = document.getElementById('np-name').value;
-  let pin = document.getElementById('np-pin').value;
-  let role = document.getElementById('np-role').value;
-  if(name && pin.length === 4) {
-    staff.push({name, role, pin});
-    alert('Personel eklendi!');
-    openAdmin();
-  } else {
-    alert('Eksik veya hatalı bilgi!');
-  }
-}
-
-function removeStaff(i) {
-  staff.splice(i, 1);
-  openAdmin();
-}
-
-function addNewPatient() {
-  let name = document.getElementById('nh-name').value;
-  let room = document.getElementById('nh-room').value;
-  let tag = document.getElementById('nh-tag').value;
-  if(name && room && tag) {
-    let id = 'p' + (Object.keys(patients).length + 1);
-    patients[id] = {name, age: 50, room, tag, status: 'Stabil', hr: 78, spo2: 97, temp: 36.5, notes: []};
-    alert('Hasta başarıyla eklendi!');
-    document.getElementById('modal').style.display = 'none';
-    renderDashboard();
-  } else {
-    alert('Lütfen tüm alanları doldurun.');
-  }
-}
-
-function scanNfc() { alert('Bileklik okundu.'); }
-
-window.onload = init;
-</script>
 </body>
 </html>

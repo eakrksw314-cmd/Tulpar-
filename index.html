@@ -49,10 +49,10 @@ h2{font-size:16px;margin-bottom:4px}
 .sub{color:var(--ink2);font-size:13px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
 .chip{flex:0 0 auto;text-align:left;border-radius:12px;padding:10px 12px;min-width:150px}
-.chip.on{background:var(--ink);color:#fff;border-color:#4311f;color: #fff; border-color: var(--ink)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .chip small{display:block;font-weight:400;opacity:.75}
 .tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;border:1px solid}
-.s-stabil{color:var(--ok);s-gözlem{color:var(--warn)}.s-kritik{color:var(--bad)}
+.s-stabil{color:var(--ok)} .s-gozlem{color:var(--tp)} .s-kritik{color:var(--bad)}
 .trace{background:var(--card);border-radius:14px;padding:14px 14px 10px;color:#fff;position:relative}
 canvas{width:100%;height:120px;display:block}
 .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
@@ -65,16 +65,9 @@ canvas{width:100%;height:120px;display:block}
 .live i{width:8px;height:8px;border-radius:50%;background:#5be09a;animation:b 1.4s infinite}
 @keyframes b{50%{opacity:.25}}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.docs{display:grid;gap:8px;margin-top:10px}
-.doc{display:flex;justify-content:space-between;align-items:center;border-radius:10px;padding:10px 12px;text-align:left}
-.doc.on{background:#e7f1f9;color:#12527d}
 .btn-p{background:var(--ink);color:#fff;border-color:var(--ink)}
-.btn-ok{background:#e4f4ec;color:var(--ok);border-color:#b9dfca}
-.btn-no{background:#fbe7e3;color:var(--bad);border-color:#efc2ba}
 textarea,input,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fbfdfc}
 textarea{resize:vertical;min-height:84px}
-.quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.quick button{font-size:12px;font-weight:500;padding:5px 12px;border-radius:99px}
 .rec{border-left:4px solid var(--ox);padding:10px 12px;background:#f6faf9;border-radius:0 10px 10px 0}
 #modal{position:fixed;inset:0;background:#0008;z-index:100;display:flex;align-items:center;justify-content:center;padding:14px}
 .modal-box{background:#fff;border-radius:16px;max-width:440px;width:100%;padding:20px;display:grid;gap:12px;max-height:90vh;overflow-y:auto}
@@ -88,37 +81,31 @@ textarea{resize:vertical;min-height:84px}
     <small id="h-sub">Sistem Yükleniyor...</small>
   </div>
   <div style="display:flex;gap:6px">
-    <button id="btn-admin" style="display:none" onclick="openAdmin()">Yönetim</button>
-    <button onclick="scanNfc()">Bileklik okut</button>
+    <button onclick="openAdmin()">Yönetim</button>
+    <button onclick="scanNfc()">Bileklik</button>
     <button onclick="logout()">Çıkış</button>
   </div>
 </header>
 
-<main id="app">
-  <!-- Dinamik içerik buraya yüklenecek -->
-</main>
+<main id="app"></main>
 
 <div id="modal" style="display:none">
   <div class="modal-box" id="modal-content"></div>
 </div>
 
 <script>
-// Tulpar Firestore & State Yönetimi
-let db, authPin = null, currentUser = null, currentPatientId = 'p1';
+let authPin = null, currentUser = null, currentPatientId = 'p1';
 let staff = [
   {name: 'Dr. Selin Kaya', role: 'Doktor', pin: '1234'},
   {name: 'Dr. Murat Aksoy', role: 'Doktor', pin: '5678'},
   {name: 'Hemşire Canan', role: 'Hemşire', pin: '0000'}
 ];
 let patients = {
-  'p1': {name: 'Ahmet Yılmaz', age: 68, room: 'Oda 302-B', tag: 'TLP-8842', status: 'Stabil', hr: 75, spo2: 96, temp: 36.6, approved: true, dr: 'Dr. Selin Kaya', notes: []},
-  'p2': {name: 'Fatma Şahin', age: 74, room: 'Oda 104-A', tag: 'TLP-5519', status: 'Kritik', hr: 112, spo2: 91, temp: 38.2, approved: false, dr: 'Dr. Murat Aksoy', notes: []},
-  'p3': {name: 'Mehmet Demir', age: 61, room: 'Oda 210-C', tag: 'TLP-3301', status: 'Stabil', hr: 80, spo2: 98, temp: 36.8, approved: true, dr: 'Dr. Selin Kaya', notes: []}
+  'p1': {name: 'Ahmet Yılmaz', age: 68, room: 'Oda 302-B', tag: 'TLP-8842', status: 'Stabil', hr: 75, spo2: 96, temp: 36.6, notes: []},
+  'p2': {name: 'Fatma Şahin', age: 74, room: 'Oda 104-A', tag: 'TLP-5519', status: 'Kritik', hr: 112, spo2: 91, temp: 38.2, notes: []}
 };
 
-function init() {
-  renderLogin();
-}
+function init() { renderLogin(); }
 
 function renderLogin() {
   document.getElementById('app').innerHTML = `
@@ -140,7 +127,6 @@ function doLogin() {
   let pin = document.getElementById('inp-pin').value;
   if(pin === staff[idx].pin) {
     currentUser = staff[idx];
-    document.getElementById('btn-admin').style.display = currentUser.role === 'Doktor' ? 'inline-block' : 'none';
     renderDashboard();
   } else {
     alert('Hatalı PIN!');
@@ -149,13 +135,11 @@ function doLogin() {
 
 function logout() {
   currentUser = null;
-  document.getElementById('btn-admin').style.display = 'none';
   renderLogin();
 }
 
 function renderDashboard() {
   let p = patients[currentPatientId];
-  document.getElementById('h-title').innerText = 'Tulpar';
   document.getElementById('h-sub').innerText = `${currentUser.name} · ${currentUser.role}`;
 
   document.getElementById('app').innerHTML = `
@@ -178,7 +162,7 @@ function renderDashboard() {
     </div>
 
     <div class="trace">
-      <div class="live"><i><span>Bulut Senkronize</span></div>
+      <div class="live"><i></i><span>Bulut Senkronize</span></div>
       <canvas id="ecg"></canvas>
       <div class="nums">
         <div class="n1"><span>Nabız</span><b>${p.hr}</b><em>Normal 60-100</em></div>
@@ -259,7 +243,7 @@ function addNewPatient() {
   let tag = document.getElementById('nh-tag').value;
   if(name && room && tag) {
     let id = 'p' + (Object.keys(patients).length + 1);
-    patients[id] = {name, age: 50, room, tag, status: 'Stabil', hr: 78, spo2: 97, temp: 36.5, approved: true, dr: currentUser.name, notes: []};
+    patients[id] = {name, age: 50, room, tag, status: 'Stabil', hr: 78, spo2: 97, temp: 36.5, notes: []};
     alert('Hasta başarıyla eklendi!');
     document.getElementById('modal').style.display = 'none';
     renderDashboard();
@@ -268,9 +252,7 @@ function addNewPatient() {
   }
 }
 
-function scanNfc() {
-  alert('NFC Bileklik tarandı: Hasta bilgileri senkronize edildi.');
-}
+function scanNfc() { alert('Bileklik okundu.'); }
 
 window.onload = init;
 </script>
